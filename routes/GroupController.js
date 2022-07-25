@@ -1,21 +1,56 @@
+import GroupModel from '../models/GroupModel.js'
+
 export default class GroupController {
   static async getGroups (req, res) {
-    res.json({response : "All the groups"});
+    GroupModel.find()
+      .then(groups => res.status(200).json(groups))
+      .catch(e => res.status(404).json(e));
   }
 
   static async getGroup (req, res) {
-    res.json({response : "A group"});
+    const {id} = req.params;
+
+    GroupModel.findById(id)
+      .then(group => res.status(200).json(group))
+      .catch(e => res.status(404).json(e));
   }
 
   static async postGroup(req, res) {
-    res.json({response : "A group is added"});
+    const {name} = req.body;
+    const group = {
+      dateCreated: new Date().toISOString(),
+      name: name
+    };
+
+    GroupModel.create(group)
+      .then(data => res.status(201).json(data))
+      .catch((e) => res.status(500).json(e));
+  
   }
 
   static async updateGroup(req, res) {
-    res.json({response : "A group is updated"});
+    const {dateCreated, name} = req.body;
+    const {id} = req.params;
+
+    try {
+      await GroupModel.validate({ name, dateCreated });
+
+      GroupModel.findByIdAndUpdate(
+        id, 
+        {$set : { name, dateCreated} } , 
+        { returnDocument: 'after'}
+      )
+        .then((g => res.status(201).json(g)))
+        .catch(e => res.status(501).json(e));
+    } catch (e) {
+      res.status(400).json(e);
+    }
   }
 
   static async deleteGroup(req, res) {
-    res.json({response : "A group is deleted"});
-  }
+    const {id} = req.params;
+
+    GroupModel.findByIdAndDelete(id)
+      .then(group => res.status(200).json(group))
+      .catch(e => res.status(404).json(e));  }
 }

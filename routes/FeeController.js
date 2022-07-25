@@ -1,21 +1,70 @@
+import FeeModel from "../models/FeeModel.js";
+import StudentModel from "../models/StudentModel.js";
+
 export default class FeeController {
   static async getFees (req, res) {
-    res.json({response : "All the fees"});
-  }
+    const { groupId, studentId } = req.params;
 
-  static async getFee (req, res) {
-    res.json({response : "A fee"});
+    FeeModel.find({ groupId, studentId })
+      .then(f => res.status(200).json(f))
+      .catch(e => res.status(404).json(e));
   }
 
   static async postFee(req, res) {
-    res.json({response : "A fee is added"});
+    const { amount } = req.body; 
+    const { studentId, groupId } = req.params;
+    
+    StudentModel.findOne({
+      _id: studentId,
+      groups : {
+        $elemMatch: {
+          groupId: groupId
+        }
+      }
+    }).then(student => {
+      if(student){
+        const data = { paidAt : new Date().toISOString(), amount, studentId, groupId };
+        FeeModel.create(data)
+          .then(d => res.status(201).json(d))
+          .catch(error => res.status(501).json(error))
+      }
+      else{
+        res.status(404).json({error : "This student was not found"})
+      }
+    })
   }
 
   static async updateFee(req, res) {
-    res.json({response : "A fee is updated"});
+    const { id } = req.params;
+    const { paidAt, amount } = req.body;
+    
+    FeeModel.findById(id)
+      .then(f => {
+        const {groupId, studentId} = f;
+        const data = {
+          groupId, 
+          studentId,
+          paidAt,
+          amount
+        }
+        FeeModel.validate(f)
+          .then(() => {
+            FeeModel.findOneAndUpdate({_id: id}, {$set: data}, { returnDocument: 'after'} )
+              .then(fee => res.status(201).json(fee))
+              .catch(e => res.status(501).json(e));
+          })
+          .catch(e => res.status(400).json(e));
+
+      }).catch(e => {
+        res.status(404).json(e);            
+      });
   }
 
   static async deleteFee(req, res) {
-    res.json({response : "A fee is deleted"});
+    const { id } = req.params;
+
+    FeeModel.findByIdAndDelete(id)
+      .then(f => res.status(200).json(f))
+      .catch(e => res.status(404).json(e))
   }
 }
