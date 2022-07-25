@@ -17,23 +17,21 @@ router.route('/groups/:id')
 
 
 // Students
-router.route('/groups/:groupId/students')
-.get(StudentController.getStudents)
-.post(StudentController.postStudent);
-
-router.route('/groups/:groupId/students/:studentId')
+router.route('/students/:id')
   .get(StudentController.getStudent)
   .put(StudentController.updateStudent)
-  .delete(StudentController.deleteStudent);
+  .delete(StudentController.deleteStudent)
 
+router.route('/groups/:groupId/students')
+  .get(StudentController.getStudents)
+  .post(StudentController.postStudent);
 
 // Fees
 router.route('/groups/:groupId/students/:studentId/fees')
   .get(FeeController.getFees)
   .post(FeeController.postFee);
 
-router.route('/groups/:groupId/students/:studentId/fees/:feeId')
-  .get(FeeController.getFee)
+router.route('/fees/:id')
   .put(FeeController.updateFee)
   .delete(FeeController.deleteFee);
 
