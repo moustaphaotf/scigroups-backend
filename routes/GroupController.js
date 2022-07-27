@@ -3,6 +3,7 @@ import GroupModel from '../models/GroupModel.js'
 export default class GroupController {
   static async getGroups (req, res) {
     GroupModel.find()
+      .sort({dateCreated: -1})
       .then(groups => res.status(200).json(groups))
       .catch(e => res.status(404).json(e));
   }

@@ -6,6 +6,7 @@ export default class FeeController {
     const { groupId, studentId } = req.params;
 
     FeeModel.find({ groupId, studentId })
+      .sort({paidAt: -1})
       .then(f => res.status(200).json(f))
       .catch(e => res.status(404).json(e));
   }

@@ -14,6 +14,7 @@ export default class StudentController {
               }
             }
           })
+          .sort({dateRegistered: -1})
           .then(d => res.status(200).json(d))
           .catch(e => res.status(404).json(e));
       })
