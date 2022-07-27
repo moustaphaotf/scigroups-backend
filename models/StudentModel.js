@@ -35,6 +35,12 @@ const StudentModel = mongoose.model("students", mongoose.Schema({
     trim: true,
     required: true
   },
+  schoolOfOrigin: {
+    type: String,
+    required: true,
+    minLength: 3,
+    maxLength: 50
+  },
   groups: [{
     groupId: String,
     dateRegistered: Date

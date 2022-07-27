@@ -36,7 +36,8 @@ export default class StudentController {
       lastname, 
       genre,
       phone,
-      grade
+      grade,
+      schoolOfOrigin
     } = req.body;
     const { groupId } = req.params;
 
@@ -47,7 +48,8 @@ export default class StudentController {
         StudentModel.findOne({
           phone: phone,
           firstname: firstname,
-          lastname: lastname
+          lastname: lastname,
+          schoolOfOrigin: schoolOfOrigin
         }, (err, student) => {
           const studentData = {
             firstname,
@@ -55,6 +57,7 @@ export default class StudentController {
             genre,
             phone,
             grade,
+            schoolOfOrigin,
             groups: []
           }
           const groupData = {
@@ -90,13 +93,15 @@ export default class StudentController {
       lastname,
       genre,
       phone,
-      grade
+      grade,
+      schoolOfOrigin
     } = req.body;
     const { id } = req.params;
 
     const data = {
       firstname, lastname,
-      genre, phone, grade
+      genre, phone, grade,
+      schoolOfOrigin
     };
 
     try {
