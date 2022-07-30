@@ -4,14 +4,14 @@ const StudentModel = mongoose.model("students", mongoose.Schema({
   firstname: {
     type: String,
     minLength: 3,
-    maxLength: 20,
+    maxLength: 50,
     trim: true,
     required: true
   },
   lastname: {
     type: String,
     minLength: 3,
-    maxLength: 30,
+    maxLength: 20,
     trim: true,
     required: true
   },

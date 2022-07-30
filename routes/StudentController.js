@@ -7,14 +7,16 @@ export default class StudentController {
     GroupModel.findById(groupId)
       .then(() => {
         StudentModel
-          .find({
-            groups : {
-              $elemMatch : {
-                groupId: groupId
+          .aggregate([{
+              $match: { "groups.groupId": groupId }
+            },{
+            $addFields: {
+              currentGroup: {
+                $filter: { input: '$groups', as: "group", cond: { $eq: ["$$group.groupId", groupId] } }
               }
             }
-          })
-          .sort({dateRegistered: -1})
+          }])
+          .sort({"currentGroup.dateRegistered": -1})
           .then(d => res.status(200).json(d))
           .catch(e => res.status(404).json(e));
       })
