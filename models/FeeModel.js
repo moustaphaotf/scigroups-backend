@@ -17,6 +17,11 @@ const FeeModel = mongoose.model("fees", mongoose.Schema({
   paidAt: {
     type: Date,
     required: true
+  },
+  description: {
+    type: String,
+    required: true,
+    maxLength: 255
   }
 }));
 

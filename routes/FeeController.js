@@ -12,7 +12,7 @@ export default class FeeController {
   }
 
   static async postFee(req, res) {
-    const { amount } = req.body; 
+    const { amount, description } = req.body; 
     const { studentId, groupId } = req.params;
     
     StudentModel.findOne({
@@ -24,7 +24,7 @@ export default class FeeController {
       }
     }).then(student => {
       if(student){
-        const data = { paidAt : new Date().toISOString(), amount, studentId, groupId };
+        const data = { paidAt : new Date().toISOString(), amount, studentId, groupId, description };
         FeeModel.create(data)
           .then(d => res.status(201).json(d))
           .catch(error => res.status(501).json(error))
@@ -37,7 +37,7 @@ export default class FeeController {
 
   static async updateFee(req, res) {
     const { id } = req.params;
-    const { paidAt, amount } = req.body;
+    const { paidAt, amount, description } = req.body;
     
     FeeModel.findById(id)
       .then(f => {
