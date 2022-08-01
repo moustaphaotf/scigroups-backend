@@ -27,6 +27,7 @@ router.route('/groups/:groupId/students')
   .post(StudentController.postStudent);
 
 // Fees
+router.get('/groups/:groupId/fees', FeeController.getFeesByGroup);
 router.route('/groups/:groupId/students/:studentId/fees')
   .get(FeeController.getFees)
   .post(FeeController.postFee);

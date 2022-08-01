@@ -11,6 +11,24 @@ export default class FeeController {
       .catch(e => res.status(404).json(e));
   }
 
+  static async getFeesByGroup (req, res) {
+    const { groupId } = req.params;
+
+    FeeModel.aggregate([{
+      $match: {
+        groupId,
+      }},
+    {
+      $group: {
+        _id: groupId,
+        totalAmount: {
+          $sum: "$amount"
+        }
+      }
+    }]).then(data => res.status(200).json(data))
+    .catch(e => res.status(404).json(e));
+  }
+
   static async postFee(req, res) {
     const { amount, description } = req.body; 
     const { studentId, groupId } = req.params;
