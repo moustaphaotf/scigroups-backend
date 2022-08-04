@@ -2,7 +2,25 @@ import GroupModel from '../models/GroupModel.js'
 
 export default class GroupController {
   static async getGroups (req, res) {
-    GroupModel.find()
+    
+    GroupModel.aggregate([{
+      $set: {
+        _id: { $toString: '$_id'}
+      }
+    },{
+      $lookup: {
+        from: 'fees',
+        localField: '_id',
+        foreignField: 'groupId',
+        as: 'fees'
+      }
+    }, {
+      $addFields: {
+        totalAmount: {
+          $sum: "$fees.amount"
+        }
+      }
+    }])
       .sort({dateCreated: -1})
       .then(groups => res.status(200).json(groups))
       .catch(e => res.status(404).json(e));
