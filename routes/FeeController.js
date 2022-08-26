@@ -64,7 +64,8 @@ export default class FeeController {
           groupId, 
           studentId,
           paidAt,
-          amount
+          amount,
+          description
         }
         FeeModel.validate(f)
           .then(() => {
